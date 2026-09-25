@@ -1,11 +1,18 @@
 import { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router'
-import * as api from '../api'
 import { getErrorMessage } from '../apiError'
+import { useAuth } from '../auth/AuthContext'
 import { Button, Card, ErrorMessage, Field, TextInput } from '../components/ui'
+
+const REASON_MESSAGES = {
+  loggedOut: '',
+  expired: 'Your session expired. Please log in again.',
+  idle: 'Locked after 15 minutes without activity.',
+}
 
 export default function LoginScreen() {
   const navigate = useNavigate()
+  const { login, logoutReason } = useAuth()
   // RegisterScreen sends { registered: true } along when it navigates here
   const justRegistered = (useLocation().state as { registered?: boolean } | null)?.registered
   const [username, setUsername] = useState('')
@@ -17,8 +24,7 @@ export default function LoginScreen() {
     setError('')
     setBusy(true)
     try {
-      await api.login(username, password)
-      // Step 6: keep the returned token in the auth context (memory only)
+      await login(username, password)
       navigate('/vault')
     } catch (err) {
       setError(getErrorMessage(err))
@@ -33,6 +39,9 @@ export default function LoginScreen() {
         <p className="mb-4 rounded-md bg-green-50 px-3 py-2 text-sm text-green-700">
           Account created. You can log in now.
         </p>
+      )}
+      {logoutReason && REASON_MESSAGES[logoutReason] && (
+        <p className="mb-4 rounded-md bg-amber-50 px-3 py-2 text-sm text-amber-800">{REASON_MESSAGES[logoutReason]}</p>
       )}
       <form
         className="space-y-4"

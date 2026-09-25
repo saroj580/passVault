@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router'
 import * as api from '../api'
 import { getErrorMessage } from '../apiError'
+import { useAuth } from '../auth/AuthContext'
 import { Button, ErrorMessage, TextInput } from '../components/ui'
 import type { ItemSummary } from '../types'
 
@@ -37,10 +38,8 @@ export default function VaultListScreen() {
     }
   }, [query])
 
-  async function handleLogout() {
-    await api.logout()
-    navigate('/login')
-  }
+  // RequireAuth moves us to the Login screen once we are logged out
+  const { logout } = useAuth()
 
   return (
     <div className="space-y-4">
@@ -48,7 +47,7 @@ export default function VaultListScreen() {
         <h1 className="text-xl font-semibold">My vault</h1>
         <div className="flex gap-2">
           <Button onClick={() => navigate('/vault/new')}>+ Add item</Button>
-          <Button variant="secondary" onClick={() => void handleLogout()}>
+          <Button variant="secondary" onClick={() => void logout()}>
             Log out
           </Button>
         </div>
