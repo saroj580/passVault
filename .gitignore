@@ -1,0 +1,19 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Node / frontend / electron
+node_modules/
+dist/
+
+# Build output (PyInstaller, electron-packager)
+build/
+out/
+
+# Databases (the real vault lives in %APPDATA%, but never commit a stray copy)
+*.db
+
+# Secrets and editor clutter
+.env
+.vscode/
