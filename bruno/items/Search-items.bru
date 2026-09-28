@@ -1,0 +1,19 @@
+meta {
+  name: Search items
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/items?q=git
+  body: none
+  auth: inherit
+}
+
+params:query {
+  q: git
+}
+
+assert {
+  res.status: eq 200
+}

@@ -5,7 +5,7 @@ from sqlmodel import Session, select
 
 from app import key_store
 from app.database import get_session
-from app.deps import get_current_user
+from app.deps import get_current_key, get_current_user
 from app.models import User
 from app.schemas import RegisterRequest, TokenOut, UserOut
 from app.security import (
@@ -57,6 +57,15 @@ def login(
 
     token, expires_at = create_access_token(user.id)
     key = derive_key(form.password, user.kdf_salt)
+    key_store.store_key(user.id, key, expires_at)
+    return TokenOut(access_token=token, expires_at=expires_at)
+
+
+@router.post("/refresh", response_model=TokenOut)
+def refresh(user: User = Depends(get_current_user), key: bytes = Depends(get_current_key)):
+    # Swap a still-valid token for a fresh 15-minute one, and move the key's
+    # expiry along with it. React calls this only while the user is active.
+    token, expires_at = create_access_token(user.id)
     key_store.store_key(user.id, key, expires_at)
     return TokenOut(access_token=token, expires_at=expires_at)
 

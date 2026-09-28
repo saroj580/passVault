@@ -1,0 +1,26 @@
+meta {
+  name: Update item
+  type: http
+  seq: 5
+}
+
+put {
+  url: {{baseUrl}}/items/{{itemId}}
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "site": "GitHub",
+    "username": "alice@example.com",
+    "url": "https://github.com",
+    "category": "Work",
+    "password": "a-new-made-up-password",
+    "notes": "Changed the password"
+  }
+}
+
+assert {
+  res.status: eq 200
+}

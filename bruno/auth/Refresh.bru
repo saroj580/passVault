@@ -1,0 +1,22 @@
+meta {
+  name: Refresh
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{baseUrl}}/auth/refresh
+  body: none
+  auth: inherit
+}
+
+script:post-response {
+  // Swap in the fresh token
+  if (res.status === 200) {
+    bru.setEnvVar("token", res.body.access_token);
+  }
+}
+
+assert {
+  res.status: eq 200
+}

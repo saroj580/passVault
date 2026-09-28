@@ -1,0 +1,15 @@
+meta {
+  name: List items
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/items
+  body: none
+  auth: inherit
+}
+
+assert {
+  res.status: eq 200
+}

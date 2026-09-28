@@ -1,0 +1,15 @@
+meta {
+  name: Get item
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/items/{{itemId}}
+  body: none
+  auth: inherit
+}
+
+assert {
+  res.status: eq 200
+}

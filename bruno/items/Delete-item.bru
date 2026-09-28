@@ -1,0 +1,15 @@
+meta {
+  name: Delete item
+  type: http
+  seq: 6
+}
+
+delete {
+  url: {{baseUrl}}/items/{{itemId}}
+  body: none
+  auth: inherit
+}
+
+assert {
+  res.status: eq 204
+}

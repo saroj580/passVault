@@ -1,0 +1,33 @@
+meta {
+  name: Create item
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/items
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "site": "GitHub",
+    "username": "alice@example.com",
+    "url": "https://github.com",
+    "category": "Work",
+    "password": "made-up-test-password",
+    "notes": "2FA codes are on my phone"
+  }
+}
+
+script:post-response {
+  // Remember the new id for Get / Update / Delete
+  if (res.status === 201) {
+    bru.setEnvVar("itemId", res.body.id);
+  }
+}
+
+assert {
+  res.status: eq 201
+}

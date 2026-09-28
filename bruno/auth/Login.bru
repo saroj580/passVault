@@ -1,0 +1,27 @@
+meta {
+  name: Login
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/auth/login
+  body: formUrlEncoded
+  auth: none
+}
+
+body:form-urlencoded {
+  username: {{username}}
+  password: {{password}}
+}
+
+script:post-response {
+  // Save the token so every other request can use it (collection auth = Bearer {{token}})
+  if (res.status === 200) {
+    bru.setEnvVar("token", res.body.access_token);
+  }
+}
+
+assert {
+  res.status: eq 200
+}
